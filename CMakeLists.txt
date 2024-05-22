@@ -8,12 +8,12 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(redrectangle)
+project(pong)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 find_package(SDL2 REQUIRED)
 
-set(VITA_APP_NAME "Red Rectangle")
+set(VITA_APP_NAME "Pong")
 set(VITA_TITLEID  "VSDK00017")
 set(VITA_VERSION  "01.00")
 

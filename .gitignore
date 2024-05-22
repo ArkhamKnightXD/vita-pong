@@ -8,11 +8,11 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
-redrectangle
-redrectangle.self
-redrectangle.self.out
-redrectangle.velf
-redrectangle.vpk.out
-redrectangle.vpk_param.sfo
+pong
+pong.self
+pong.self.out
+pong.velf
+pong.vpk.out
+pong.vpk_param.sfo
 _deps
 

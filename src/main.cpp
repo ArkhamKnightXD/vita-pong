@@ -11,13 +11,16 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_GameController* controller = NULL;
 
-SDL_Rect rectangle = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 32, 32};
-
-const int SPEED = 600; // Lower speed for testing
 const int FRAME_RATE = 60; // Desired frame rate (frames per second)
- 
 
-// Exit the game and clean up
+SDL_Rect player1;
+SDL_Rect player2;
+SDL_Rect ball;
+
+int playerSpeed = 800;
+int ballVelocityX = 400;
+int ballVelocityY = 400;
+
 void quitGame() {
     SDL_GameControllerClose(controller);
     SDL_DestroyRenderer(renderer);
@@ -25,7 +28,6 @@ void quitGame() {
     SDL_Quit();
 }
 
-// Function to handle events
 void handleEvents() {
 
     SDL_Event event;
@@ -39,42 +41,70 @@ void handleEvents() {
         }
     }
 }
+
+bool hasCollision(SDL_Rect player, SDL_Rect ball) {
+
+    return player.x < ball.x + ball.w && player.x + player.w > ball.x &&
+            player.y < ball.y + ball.h && player.y + player.h > ball.y;
+}
  
-// Function to update rectangle movement
 void update(float deltaTime) {
 
     SDL_GameControllerUpdate();
 
-    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && rectangle.y > 0) {
-        rectangle.y -= SPEED * deltaTime;
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && player1.y > 0) {
+        player1.y -= playerSpeed * deltaTime;
     }
 
-    else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && rectangle.y < SCREEN_HEIGHT - rectangle.h) {
-        rectangle.y += SPEED * deltaTime;
+    else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && player1.y < SCREEN_HEIGHT - player1.h) {
+        player1.y += playerSpeed * deltaTime;
     }
 
-    else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) && rectangle.x > 0) {
-        rectangle.x -= SPEED * deltaTime;
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y) && player2.y > 0) {
+        player2.y -= playerSpeed * deltaTime;
     }
 
-    else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && rectangle.x < SCREEN_WIDTH - rectangle.w) {
-        rectangle.x += SPEED * deltaTime;
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A) && player2.y < SCREEN_HEIGHT - player2.h) {
+        player2.y += playerSpeed * deltaTime;
     }
+
+    if (ball.x > SCREEN_WIDTH + ball.w || ball.x < -ball.w)
+    {
+        ball.x = SCREEN_WIDTH / 2 - ball.w;
+        ball.y = SCREEN_HEIGHT / 2 - ball.h;
+
+        ballVelocityX *= -1;
+        ballVelocityY *= -1;
+    }
+
+    if (ball.y < 0 || ball.y > SCREEN_HEIGHT - ball.h)
+    {
+        ballVelocityY *= -1;
+    }
+
+    if (hasCollision(player1, ball) || hasCollision(player2, ball))
+    {
+        ballVelocityX *= -1;
+    }
+    
+    ball.x += ballVelocityX * deltaTime;
+    ball.y += ballVelocityY * deltaTime;
 }
 
-// Function to render graphics
 void render() {
-    // Clear the renderer
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Set drawing color to white
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-    // Render the rectangle
-    SDL_RenderFillRect(renderer, &rectangle);
+    SDL_RenderFillRect(renderer, &player1);
 
-    // Present the renderer
+    SDL_RenderDrawLine(renderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+
+    SDL_RenderFillRect(renderer, &ball);
+    SDL_RenderFillRect(renderer, &player2);
+
     SDL_RenderPresent(renderer);
 }
 
@@ -104,13 +134,21 @@ int main(int argc, char *argv[])
     if (SDL_NumJoysticks() < 1) {
         printf("No game controllers connected!\n");
         return -1;
-    } else {
+    } 
+    else {
+
         controller = SDL_GameControllerOpen(0);
         if (controller == NULL) {
             printf("Unable to open game controller! SDL Error: %s\n", SDL_GetError());
             return -1;
         }
     }
+    
+
+    player1 = {16, SCREEN_HEIGHT / 2 - 64, 16, 74};
+    player2 = {SCREEN_WIDTH - 32, SCREEN_HEIGHT / 2 - 64, 16, 74};
+
+    ball = {SCREEN_WIDTH / 2 - 26, SCREEN_HEIGHT / 2 - 26, 26, 26};
 
     Uint32 previousFrameTime = SDL_GetTicks();
     Uint32 currentFrameTime;
