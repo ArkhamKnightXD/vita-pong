@@ -11,17 +11,16 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_GameController* controller = NULL;
 
-const int FRAME_RATE = 60; // Desired frame rate (frames per second)
-
-SDL_Rect player1;
-SDL_Rect player2;
-SDL_Rect ball;
+SDL_Rect player1 = {16, SCREEN_HEIGHT / 2 - 64, 16, 74};
+SDL_Rect player2 = {SCREEN_WIDTH - 32, SCREEN_HEIGHT / 2 - 64, 16, 74};
+SDL_Rect ball = {SCREEN_WIDTH / 2 - 26, SCREEN_HEIGHT / 2 - 26, 26, 26};
 
 int playerSpeed = 800;
 int ballVelocityX = 400;
 int ballVelocityY = 400;
 
 void quitGame() {
+    
     SDL_GameControllerClose(controller);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -108,6 +107,8 @@ void render() {
     SDL_RenderPresent(renderer);
 }
 
+const int FRAME_RATE = 60; 
+
 void capFrameRate(Uint32 frameStartTime) {
 
     Uint32 frameTime = SDL_GetTicks() - frameStartTime;
@@ -144,12 +145,6 @@ int main(int argc, char *argv[])
         }
     }
     
-
-    player1 = {16, SCREEN_HEIGHT / 2 - 64, 16, 74};
-    player2 = {SCREEN_WIDTH - 32, SCREEN_HEIGHT / 2 - 64, 16, 74};
-
-    ball = {SCREEN_WIDTH / 2 - 26, SCREEN_HEIGHT / 2 - 26, 26, 26};
-
     Uint32 previousFrameTime = SDL_GetTicks();
     Uint32 currentFrameTime;
     float deltaTime;
