@@ -1,7 +1,6 @@
 #include <psp2/kernel/processmgr.h>
 #include <SDL2/SDL.h>
 
-// Screen dimension constants
 enum {
   SCREEN_WIDTH  = 960,
   SCREEN_HEIGHT = 544
@@ -18,6 +17,8 @@ SDL_Rect ball = {SCREEN_WIDTH / 2 - 26, SCREEN_HEIGHT / 2 - 26, 26, 26};
 int playerSpeed = 800;
 int ballVelocityX = 400;
 int ballVelocityY = 400;
+
+bool isAutoPlayMode = true;
 
 void quitGame() {
     
@@ -57,6 +58,16 @@ void update(float deltaTime) {
 
     else if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && player1.y < SCREEN_HEIGHT - player1.h) {
         player1.y += playerSpeed * deltaTime;
+    }
+
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START))
+    {
+        isAutoPlayMode = !isAutoPlayMode;
+    }
+
+    if (isAutoPlayMode && ball.y < SCREEN_HEIGHT - player2.h)
+    {
+        player2.y = ball.y;
     }
 
     if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y) && player2.y > 0) {
@@ -149,7 +160,6 @@ int main(int argc, char *argv[])
     Uint32 currentFrameTime;
     float deltaTime;
 
-    // Main loop
     while (1) {
 
         currentFrameTime = SDL_GetTicks();
