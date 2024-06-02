@@ -60,13 +60,11 @@ void update(float deltaTime) {
         player1.y += playerSpeed * deltaTime;
     }
 
-    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START))
-    {
+    if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START)) {
         isAutoPlayMode = !isAutoPlayMode;
     }
 
-    if (isAutoPlayMode && ball.y < SCREEN_HEIGHT - player2.h)
-    {
+    if (isAutoPlayMode && ball.y < SCREEN_HEIGHT - player2.h) {
         player2.y = ball.y;
     }
 
@@ -78,8 +76,8 @@ void update(float deltaTime) {
         player2.y += playerSpeed * deltaTime;
     }
 
-    if (ball.x > SCREEN_WIDTH + ball.w || ball.x < -ball.w)
-    {
+    if (ball.x > SCREEN_WIDTH + ball.w || ball.x < -ball.w) {
+
         ball.x = SCREEN_WIDTH / 2 - ball.w;
         ball.y = SCREEN_HEIGHT / 2 - ball.h;
 
@@ -87,13 +85,11 @@ void update(float deltaTime) {
         ballVelocityY *= -1;
     }
 
-    if (ball.y < 0 || ball.y > SCREEN_HEIGHT - ball.h)
-    {
+    if (ball.y < 0 || ball.y > SCREEN_HEIGHT - ball.h) {
         ballVelocityY *= -1;
     }
 
-    if (hasCollision(player1, ball) || hasCollision(player2, ball))
-    {
+    if (hasCollision(player1, ball) || hasCollision(player2, ball)) {
         ballVelocityX *= -1;
     }
     
