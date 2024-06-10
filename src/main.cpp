@@ -125,7 +125,7 @@ void capFrameRate(Uint32 frameStartTime) {
     }
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
         return -1;
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
     Uint32 currentFrameTime;
     float deltaTime;
 
-    while (1) {
+    while (true) {
 
         currentFrameTime = SDL_GetTicks();
         deltaTime = (currentFrameTime - previousFrameTime) / 1000.0f;
@@ -170,5 +170,4 @@ int main(int argc, char *argv[])
     }
 
     quitGame();
-    return 0;
 }
